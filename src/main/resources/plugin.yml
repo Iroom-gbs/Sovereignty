@@ -1,0 +1,12 @@
+main: me.iroom.sovereignty.Sovereignty
+name: Sovereignty
+version: '1.0'
+description: Sovereignty
+load: POSTWORLD
+author: Dayo, Kiroo
+website: iroom.me
+prefix: Sovereignty
+
+commands:
+  sovereignty:
+    description: asdf
