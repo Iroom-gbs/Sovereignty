@@ -7,6 +7,7 @@ import me.iroom.sovereignty.area.TeamManager.registerTeam
 import me.iroom.sovereignty.commands.CommandStructure
 import me.iroom.sovereignty.commands.SubCommand
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -37,6 +38,7 @@ class Sovereignty: JavaPlugin() {
                         val loc = (sender as Player).location.subtract(0.0,1.0,0.0)
                         val block = loc.block
                         getLocationArea(block.location).coreLoc = block.location
+                        block.type = Material.SEA_LANTERN
 
                         true
                     })).register("sovereignty")

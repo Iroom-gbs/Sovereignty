@@ -1,6 +1,7 @@
 main: me.iroom.sovereignty.Sovereignty
 name: Sovereignty
 version: '1.0'
+api-version: 1.19
 description: Sovereignty
 load: POSTWORLD
 author: Dayo, Kiroo

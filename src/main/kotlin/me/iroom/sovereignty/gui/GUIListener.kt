@@ -6,7 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class GUIListener : Listener {
     @EventHandler
-    fun shopEvent(event: InventoryClickEvent) {
+    fun guiEvent(event: InventoryClickEvent) {
 
     }
 }
