@@ -41,6 +41,8 @@ class EvListener : Listener {
                 if(a.vulnerable) {
                     a.vulnerable = false
                     a.team = p.getTeam()!!.name
+                    a.level = 2
+                    //TDDO: 팀 포인트 깎기
                 }
                 else {
                     a.reinforced = true

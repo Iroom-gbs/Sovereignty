@@ -51,7 +51,7 @@ object AreaManager {
         var z = loc.z.toInt()
         x = (x + 500) / 200 //0 0 기준으로 내리기
         z = (z + 500) / 200
-        return Areas[x * 5 + z]
+        return Areas[x + z * 5]
     }
 
     fun isProtectedArea(loc: Location): Boolean { //코어 주변인지 확인

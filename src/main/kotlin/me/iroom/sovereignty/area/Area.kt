@@ -19,7 +19,6 @@ class Area(areaID : Int, coreLoc : Location, team: String){
     var vulnerableEndTime = Calendar.getInstance() //취약 풀리는 시간
 
     var level = 2 //현재레벨
-        get private set
 
     companion object {
         const val maxLevel = 6
@@ -46,29 +45,29 @@ class Area(areaID : Int, coreLoc : Location, team: String){
     fun giveEffect(p: Player) {
         if(p.getTeam() != null && p.getTeam()?.name  == team) {
             if(1<=level)
-                p.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 1, 1))
+                p.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 30, 0))
             if(2<=level) {
-                p.addPotionEffect(PotionEffect(PotionEffectType.LUCK, 1, 1))
-                p.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, 1, 1))
-                p.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1, 1))
+                p.addPotionEffect(PotionEffect(PotionEffectType.LUCK, 30, 0))
+                p.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, 30, 0))
+                p.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 30, 0))
             }
             if(3<=level) {
-                p.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 1, 1))
-                p.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 1, 1))
+                p.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 30, 0))
+                p.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 30, 0))
             }
             if(4<=level)
-                p.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 1, 2))
+                p.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 30, 1))
         }
         else {
-            p.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 1, 2))
+            p.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 30, 1))
             if(4<=level)
-                p.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 1, 1))
+                p.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 30, 0))
             if(5<=level) {
-                p.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 1, 1))
-                p.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, 1, 1))
+                p.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 30, 0))
+                p.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, 30, 0))
             }
             if(6<=level) {
-                p.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 1, 3))
+                p.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 30, 2))
             }
         }
     }
