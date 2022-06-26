@@ -6,24 +6,17 @@ import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.block.BlockPistonExtendEvent
-import org.bukkit.event.block.BlockPistonRetractEvent
 import org.bukkit.event.player.PlayerBedEnterEvent
-import org.bukkit.event.block.BlockFromToEvent
 import org.bukkit.event.entity.EntityExplodeEvent
-import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.world.StructureGrowEvent
 import org.bukkit.event.player.PlayerBucketFillEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
-import org.bukkit.event.block.SpongeAbsorbEvent
-import org.bukkit.event.block.BlockGrowEvent
 import me.iroom.sovereignty.area.AreaManager.isProtectedArea
 import me.iroom.sovereignty.area.TeamManager.getTeam
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.event.block.*
 import java.util.*
 
 class EvListener : Listener {
@@ -116,6 +109,11 @@ class EvListener : Listener {
     }
 
     @EventHandler
+    fun onBlockSpread(event: BlockSpreadEvent) {
+        if (isProtectedArea(event.block.location)) event.isCancelled = true
+    }
+
+    @EventHandler
     fun onPlayerBucketFill(event: PlayerBucketFillEvent) {
         if(isProtectedArea(event.block.location) && event.player.gameMode == GameMode.SURVIVAL) {
             event.isCancelled = true
@@ -124,6 +122,9 @@ class EvListener : Listener {
 
     @EventHandler
     fun onPlayerBucketEmpty(event: PlayerBucketEmptyEvent) {
+        val p = event.player
+        val b = event.block
+        if(!(p.getTeam() != null && getLocationArea(b.location).team == p.getTeam()!!.name)) event.isCancelled = true
         if(isProtectedArea(event.block.location) && event.player.gameMode == GameMode.SURVIVAL) {
             event.isCancelled = true
         }
