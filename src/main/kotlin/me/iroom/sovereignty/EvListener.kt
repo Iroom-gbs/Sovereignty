@@ -14,8 +14,10 @@ import org.bukkit.event.player.PlayerBucketFillEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import me.iroom.sovereignty.area.AreaManager.isProtectedArea
 import me.iroom.sovereignty.area.TeamManager.getTeam
+import me.iroom.sovereignty.gui.AreaGUI.showAreaGUI
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Material
 import org.bukkit.event.block.*
 import java.util.*
 
@@ -25,17 +27,18 @@ class EvListener : Listener {
         val b = event.block
         val p = event.player
         val a = getLocationArea(b.location)
+        if(b.type == Material.BEDROCK)
+            showAreaGUI(event.player)
+
         //코어 블럭이면
         if(isCoreBlock(b.location)) {
-            if(a.reinforced) {
-                event.isCancelled = true
-            }
-            else {
+            if(!a.reinforced) {
                 if(a.vulnerable) {
                     a.vulnerable = false
                     a.team = p.getTeam()!!.name
                     a.level = 2
-                    //TDDO: 팀 포인트 깎기
+
+                    //TODO: 팀포인트 깎기
                 }
                 else {
                     a.reinforced = true
@@ -50,7 +53,10 @@ class EvListener : Listener {
                     a.reinforceEndTime = cal
                 }
             }
+
+            event.isCancelled = true
         }
+
         //보호구역 내의 블럭이고 (코어 포함) 서바이벌 플레이어가 부쉈다면 취소
         if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) event.isCancelled = true
     }

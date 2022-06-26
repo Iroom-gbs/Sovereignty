@@ -50,10 +50,10 @@ object AreaManager {
         var x = loc.x.toInt()
         var z = loc.z.toInt()
 
-        if (x > 500) x = 500
-        if (x < -500) x = -500
-        if (z > 500) z = 500
-        if (z < -500) z = -500
+        if (x >= 500) x = 499
+        if (x <= -500) x = -499
+        if (z >= 500) z = 499
+        if (z <= -500) z = -499
 
         x = (x + 500) / 200 //0 0 기준으로 내리기
         z = (z + 500) / 200
