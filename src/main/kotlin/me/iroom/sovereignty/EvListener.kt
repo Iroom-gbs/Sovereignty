@@ -21,8 +21,10 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.bukkit.event.block.SpongeAbsorbEvent
 import org.bukkit.event.block.BlockGrowEvent
 import me.iroom.sovereignty.area.AreaManager.isProtectedArea
+import me.iroom.sovereignty.area.TeamManager.getTeam
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import java.util.*
 
 class EvListener : Listener {
     @EventHandler
@@ -37,15 +39,17 @@ class EvListener : Listener {
             }
             else {
                 if(a.vulnerable) {
-                    //TODO: 부순 사람 팀으로 결정됨
+                    a.vulnerable = false
+                    a.team = p.getTeam()!!.name
                 }
                 else {
                     a.reinforced = true
+                    val cal = Calendar.getInstance()
                     //TODO: 강화 끝나는 시간 설정
                 }
             }
         }
-        //보호구역 내의 블럭이고 (코어 포함) 서바이벌 플레이어가 설치했다면 취소
+        //보호구역 내의 블럭이고 (코어 포함) 서바이벌 플레이어가 부쉈다면 취소
         if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) event.isCancelled = true
     }
 
@@ -55,6 +59,8 @@ class EvListener : Listener {
         val p = event.player
         //보호구역내에 서바이벌 플레이어가 설치했다면 취소
         if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) event.isCancelled = true
+        //구역이 자기 팀이 아니면 취소
+        if(!(p.getTeam() != null && getLocationArea(b.location).team == p.getTeam()!!.name)) event.isCancelled = true
     }
 
     @EventHandler

@@ -20,14 +20,14 @@ object TeamManager {
 
     fun Player.getTeam() = this.scoreboard.getEntryTeam(uniqueId.toString())
 
-    data class Team(public val name: String) {
+    data class Team(val name: String) {
         var id: Int = -1
             set(value) {
                 if(field != -1) throw IllegalAccessException("Not allowed")
                 field = value
             }
 
-        public val team get() = Bukkit.getScoreboardManager()?.mainScoreboard!!.getTeam(name)!!
+        val team get() = Bukkit.getScoreboardManager()?.mainScoreboard!!.getTeam(name)!!
         val color get() = team.color
     }
 }
