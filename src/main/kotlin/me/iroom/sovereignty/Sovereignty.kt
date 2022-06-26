@@ -1,15 +1,20 @@
 package me.iroom.sovereignty
 
+import me.ddayo.coroutine.Coroutine
+import me.ddayo.coroutine.functions.WaitNextTick
+import me.iroom.sovereignty.area.AreaManager.getLocationArea
 import me.iroom.sovereignty.area.TeamManager.registerTeam
 import me.iroom.sovereignty.commands.CommandStructure
 import me.iroom.sovereignty.commands.SubCommand
 import org.bukkit.ChatColor
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 //게시판//
 //5 X 5로 나뉜 지역 기준 -500 500이 0번 500 -500이 24번 (좌표평면에서 왼쪽위부터 오른쪽아래)
+//=>변경 : -500 -500이 1번 500 500이 25번
 //TODO: 구역이 특정 플레이어 팀 땅인지 확인하는 함수 만들어줘 => 현재 플레이어 팀 구하는거 만듬
-//TODO: 자기가 밟고 있는 블럭을 해당 구역의 코어블럭으로 만드는 명령어 만들워줘 (크리 전용) => 하단 TODO
+//TODO: 자기가 밟고 있는 블럭을 해당 구역의 코어블럭으로 만드는 명령어 만들워줘 (크리 전용) => 완료
 ////////
 
 class Sovereignty: JavaPlugin() {
@@ -28,7 +33,11 @@ class Sovereignty: JavaPlugin() {
                 .register(SubCommand("set_core")
                     .execute { sender, args ->
                         if(!sender.isOp) return@execute false
-                        //TODO
+
+                        val loc = (sender as Player).location.subtract(0.0,1.0,0.0)
+                        val block = loc.block
+                        getLocationArea(block.location).coreLoc = block.location
+
                         true
                     })).register("sovereignty")
     }
