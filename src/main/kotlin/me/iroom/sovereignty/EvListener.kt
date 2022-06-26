@@ -41,11 +41,20 @@ class EvListener : Listener {
                 if(a.vulnerable) {
                     a.vulnerable = false
                     a.team = p.getTeam()!!.name
+                    a.level = 2
+                    //TDDO: 팀 포인트 깎기
                 }
                 else {
                     a.reinforced = true
                     val cal = Calendar.getInstance()
-                    //TODO: 강화 끝나는 시간 설정
+                    val hour = cal.get(Calendar.HOUR_OF_DAY)
+                    if(hour in 0..3) cal.add(Calendar.HOUR_OF_DAY, 8)
+                    if(hour in 5..7) cal.add(Calendar.HOUR_OF_DAY, 6)
+                    if(hour in 8..11) cal.add(Calendar.HOUR_OF_DAY, 4)
+                    if(hour in 12..16) cal.add(Calendar.HOUR_OF_DAY, 3)
+                    if(hour in 17..19) cal.add(Calendar.HOUR_OF_DAY, 2)
+                    if(hour in 20..23) cal.add(Calendar.HOUR_OF_DAY, 10)
+                    a.reinforceEndTime = cal
                 }
             }
         }

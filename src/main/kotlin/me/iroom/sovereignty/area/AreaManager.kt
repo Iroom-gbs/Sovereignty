@@ -3,6 +3,7 @@ package me.iroom.sovereignty.area
 
 import me.ddayo.coroutine.Coroutine
 import me.ddayo.coroutine.functions.WaitNextTick
+import me.ddayo.coroutine.functions.WaitSeconds
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Color
@@ -16,7 +17,7 @@ object AreaManager {
     }
 
 
-    var LevelPoint = HashMap<Color, Int>()
+    var LevelPoint = HashMap<Color, Int>() //이거 머여?
     val coreProtectArea = 5;
 
     init {
@@ -40,8 +41,7 @@ object AreaManager {
                         it.vulnerable = false
                     }
                 }
-
-                yield(WaitNextTick())
+                yield(WaitSeconds(1.0))
             }
         })
     }
@@ -51,7 +51,7 @@ object AreaManager {
         var z = loc.z.toInt()
         x = (x + 500) / 200 //0 0 기준으로 내리기
         z = (z + 500) / 200
-        return Areas[x * 5 + z]
+        return Areas[x + z * 5]
     }
 
     fun isProtectedArea(loc: Location): Boolean { //코어 주변인지 확인
