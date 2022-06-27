@@ -1,11 +1,9 @@
 package me.iroom.sovereignty.gui
 
-import me.iroom.sovereignty.area.Area
 import me.iroom.sovereignty.area.AreaManager.Areas
 import me.iroom.sovereignty.area.TeamManager.getTeam
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.DyeColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -73,8 +71,29 @@ object AreaGUI {
                 Bukkit.getConsoleSender().sendMessage(colorName.plus("_").plus(matName))
                 val m = Material.getMaterial(colorName.plus("_").plus(matName))
                 val num = i+5*j+1
-                val itemS = createGuiItem(m, num.toString().plus("번 구역"))
-                inv.setItem(9 * j + i + 2, itemS)
+                val item = ItemStack(m!!, a.level+1)
+                val meta = item.itemMeta
+                meta!!.setDisplayName(num.toString().plus("번 구역"))
+                if(a.reinforced) {
+                    val lore = ArrayList<String>()
+                    lore.add("강화 상태")
+                    var milis = a.reinforceEndTime.time.time - Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).time.time
+                    milis = milis/1000/60
+                    lore.add(milis.toString().plus("분 남음"))
+                    meta.lore = lore
+                }
+                if(a.vulnerable) {
+                    val lore = ArrayList<String>()
+                    lore.add("강화 상태")
+                    lore.add("취약 상태")
+                    var milis = a.vulnerableEndTime.time.time - Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).time.time
+                    milis = milis/1000/60
+                    lore.add(milis.toString().plus("분 남음"))
+                    meta.lore = lore
+                }
+                item.itemMeta = meta
+
+                inv.setItem(9 * j + i + 2, item)
             }
         }
 
