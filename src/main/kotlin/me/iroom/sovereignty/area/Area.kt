@@ -1,6 +1,7 @@
 package me.iroom.sovereignty.area
 
 import me.iroom.sovereignty.area.TeamManager.getTeam
+import me.iroom.sovereignty.util.Option
 import org.bukkit.*
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
@@ -10,8 +11,9 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 
-class Area(areaID : Int, coreLoc : Location, team: String){
-    val areaID : Int //구역 ID <- 내부적으로는 0부터 시작되는 배열로 처리하고, 이거는 표시되는 ID
+class Area(areaID : Int, coreLoc : Location, team: String) {
+    constructor(areaID: Int): this(areaID, Location(Bukkit.getWorlds().first(), 0.0, 0.0, 0.0), "None")
+    val areaID: Int //구역 ID <- 내부적으로는 0부터 시작되는 배열로 처리하고, 이거는 표시되는 ID
 
     var coreLoc: Location //코어의 좌표
     var team: String //Team ID
@@ -29,6 +31,23 @@ class Area(areaID : Int, coreLoc : Location, team: String){
 
     companion object {
         const val maxLevel = 6
+
+        fun Option.getArea() = Area(this["areaID"].first().value.toInt()).apply {
+            val opt = this@getArea
+            coreLoc = Location(
+                Bukkit.getWorld(UUID.fromString(opt["coreLocUID"].first().value)),
+                opt["coreX"].first().value.toDouble(),
+                opt["coreY"].first().value.toDouble(),
+                opt["coreZ"].first().value.toDouble()
+            )
+            team = opt["team"].first().value
+            reinforced = opt["reinforced"].first().value == "1"
+            reinforceEndTime = Calendar.getInstance().apply { timeInMillis = opt["reinforcedTime"].first().value.toLong() }
+            vulnerable = opt["vulnerable"].first().value == "1"
+            vulnerableEndTime = Calendar.getInstance().apply { timeInMillis = opt["vulnerableTime"].first().value.toLong() }
+            coreHp = opt["corehp"].first().value.toInt()
+            level = opt["level"].first().value.toInt()
+        }
     }
 
     init {
@@ -38,14 +57,14 @@ class Area(areaID : Int, coreLoc : Location, team: String){
     }
 
     fun levelUp() {
-        if(level == maxLevel) return
-        if(reinforced) return
+        if (level == maxLevel) return
+        if (reinforced) return
         level++
     }
 
     fun levelDown() {
-        if(level ==0) return
-        if(reinforced) return
+        if (level == 0) return
+        if (reinforced) return
         level--
     }
 
@@ -55,27 +74,26 @@ class Area(areaID : Int, coreLoc : Location, team: String){
         if (p.getTeam() != null && p.getTeam()?.name == team) {
             if (1 <= level)
                 p.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 30, 0))
-            if(2<=level) {
+            if (2 <= level) {
                 p.addPotionEffect(PotionEffect(PotionEffectType.LUCK, 30, 0))
                 p.addPotionEffect(PotionEffect(PotionEffectType.WATER_BREATHING, 30, 0))
                 p.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 30, 0))
             }
-            if(3<=level) {
+            if (3 <= level) {
                 p.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 30, 0))
                 p.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 30, 0))
             }
-            if(4<=level)
+            if (4 <= level)
                 p.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 30, 1))
-        }
-        else {
+        } else {
             p.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 30, 1))
-            if(4<=level)
+            if (4 <= level)
                 p.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 30, 0))
-            if(5<=level) {
+            if (5 <= level) {
                 p.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 30, 0))
                 p.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, 30, 0))
             }
-            if(6<=level) {
+            if (6 <= level) {
                 p.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 30, 2))
             }
         }
