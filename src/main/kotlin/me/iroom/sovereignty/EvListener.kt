@@ -30,17 +30,19 @@ class EvListener : Listener {
 
         if(b.type == Material.BEDROCK) {
             showAreaGUI(event.player)
-            event.isCancelled = true
         }
 
         if(isCoreBlock(b.location)) {
-            if(p.getTeam() != null) {
-                if(p.getTeam()!!.name != a.team)
-                    a.coreHp -= 1
+            if(a.coreHp >= 0) {
+                if(p.getTeam() != null) {
+                    if(p.getTeam()!!.name != a.team)
+                        a.coreHp -= 1
+                }
+                else a.coreHp -= 1
             }
-            else a.coreHp -= 1
 
-            if(a.coreHp == 0) a.coreBreak(event.player)
+            if(a.coreHp <= 0) a.coreBreak(event.player)
+
 
             event.isCancelled = true
         }

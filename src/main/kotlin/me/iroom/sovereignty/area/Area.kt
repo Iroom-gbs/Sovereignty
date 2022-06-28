@@ -102,7 +102,7 @@ class Area(areaID : Int, coreLoc : Location, team: String){
 
     fun coreBreak(p: Player) {
         if (p.getTeam()!!.name != team) {
-            if (reinforced) {
+            if (!reinforced) {
                 if (vulnerable) {
                     team = p.getTeam()!!.name
                     level = 2
@@ -134,12 +134,12 @@ class Area(areaID : Int, coreLoc : Location, team: String){
         else if(vulnerable) {
             bar.setTitle("${areaID}번 구역 : 취약")
             bar.color = BarColor.PURPLE
-            bar.progress = coreHp/maxCoreHp.toDouble()
+            bar.progress = coreHp/20.0
         }
         else { //일반 상태
             bar.setTitle("${areaID}번 구역")
             bar.color =BarColor.GREEN
-            bar.progress = coreHp/maxCoreHp.toDouble()
+            bar.progress = coreHp/50.0
         }
     }
 
