@@ -17,9 +17,9 @@ import me.iroom.sovereignty.area.TeamManager.getTeam
 import me.iroom.sovereignty.gui.AreaGUI.showAreaGUI
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.*
-import java.util.*
 
 class EvListener : Listener {
     @EventHandler
@@ -27,38 +27,29 @@ class EvListener : Listener {
         val b = event.block
         val p = event.player
         val a = getLocationArea(b.location)
-        if(b.type == Material.BEDROCK)
+
+        if(b.type == Material.BEDROCK) {
             showAreaGUI(event.player)
+        }
 
-        //코어 블럭이면
         if(isCoreBlock(b.location)) {
-            if(!a.reinforced) {
-                if(a.vulnerable) {
-                    a.vulnerable = false
-                    a.team = p.getTeam()!!.name
-                    a.level = 2
-
-                    //TODO: 팀포인트 깎기
+            if(a.coreHp >= 0) {
+                if(p.getTeam() != null) {
+                    if(p.getTeam()!!.name != a.team)
+                        a.coreHp -= 1
                 }
-                else {
-                    a.reinforced = true
-                    val cal = Calendar.getInstance()
-                    val hour = cal.get(Calendar.HOUR_OF_DAY)
-                    if(hour in 0..3) cal.add(Calendar.HOUR_OF_DAY, 8)
-                    if(hour in 5..7) cal.add(Calendar.HOUR_OF_DAY, 6)
-                    if(hour in 8..11) cal.add(Calendar.HOUR_OF_DAY, 4)
-                    if(hour in 12..16) cal.add(Calendar.HOUR_OF_DAY, 3)
-                    if(hour in 17..19) cal.add(Calendar.HOUR_OF_DAY, 2)
-                    if(hour in 20..23) cal.add(Calendar.HOUR_OF_DAY, 10)
-                    a.reinforceEndTime = cal
-                }
+                else a.coreHp -= 1
             }
+
+            if(a.coreHp <= 0) a.coreBreak(event.player)
+
 
             event.isCancelled = true
         }
 
-        //보호구역 내의 블럭이고 (코어 포함) 서바이벌 플레이어가 부쉈다면 취소
-        if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) event.isCancelled = true
+        if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) {
+            event.isCancelled = true
+        }
     }
 
     @EventHandler
@@ -130,7 +121,10 @@ class EvListener : Listener {
     fun onPlayerBucketEmpty(event: PlayerBucketEmptyEvent) {
         val p = event.player
         val b = event.block
-        if(!(p.getTeam() != null && getLocationArea(b.location).team == p.getTeam()!!.name)) event.isCancelled = true
+        if(p.getTeam() != null) {
+            if(getLocationArea(b.location).team != p.getTeam()!!.name && p.location.world == Bukkit.getWorld("world"))
+                event.isCancelled = true
+        }
         if(isProtectedArea(event.block.location) && event.player.gameMode == GameMode.SURVIVAL) {
             event.isCancelled = true
         }
@@ -166,7 +160,12 @@ class EvListener : Listener {
 
     @EventHandler
     fun onPlayerBedEnter(event: PlayerBedEnterEvent) {
-        //TODO:다른팀 땅에서 못 자게 하기
+        val p = event.player
+        if(p.getTeam() != null) {
+            if(getLocationArea(event.bed.location).team != p.getTeam()!!.name)
+                event.isCancelled = true
+        }
+        else event.isCancelled = true
     }
 
     @EventHandler
@@ -180,7 +179,13 @@ class EvListener : Listener {
 
         val prevArea = getLocationArea(event.from).areaID
         val afterArea = getLocationArea(event.to!!).areaID
-        if (prevArea != afterArea)
+        if (event.to!!.world == Bukkit.getWorld("world") && prevArea != afterArea)
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent("${afterArea}번 구역에 진입했습니다."))
+        if (isProtectedArea(event.to!!)) {
+            getLocationArea(p.location).bar.addPlayer(p)
+        }
+        else if (p.location.world == Bukkit.getWorld("world")){
+            getLocationArea(p.location).bar.removePlayer(p)
+        }
     }
 }
