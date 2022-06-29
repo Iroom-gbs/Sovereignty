@@ -1,25 +1,24 @@
 package me.iroom.sovereignty
 
+import me.iroom.sovereignty.area.AreaManager
 import me.iroom.sovereignty.area.AreaManager.getLocationArea
 import me.iroom.sovereignty.area.AreaManager.isCoreBlock
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerBedEnterEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.world.StructureGrowEvent
-import org.bukkit.event.player.PlayerBucketFillEvent
-import org.bukkit.event.player.PlayerBucketEmptyEvent
 import me.iroom.sovereignty.area.AreaManager.isProtectedArea
 import me.iroom.sovereignty.team.TeamManager.getTeam
 import me.iroom.sovereignty.gui.AreaGUI.showAreaGUI
+import me.iroom.sovereignty.gui.LevelUpDownGUI
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.*
+import org.bukkit.event.player.*
 
 class EvListener : Listener {
     @EventHandler
@@ -50,6 +49,15 @@ class EvListener : Listener {
         if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) {
             event.isCancelled = true
         }
+    }
+
+    @EventHandler
+    fun onInteractItem(event: PlayerInteractEvent) {
+        if(event.action == Action.RIGHT_CLICK_BLOCK)
+            AreaManager.Areas.firstOrNull { it.coreLoc == event.clickedBlock!!.location }?.let {
+                event.player.openInventory(LevelUpDownGUI(it.areaID).inventory)
+                event.isCancelled = true
+            }
     }
 
     @EventHandler

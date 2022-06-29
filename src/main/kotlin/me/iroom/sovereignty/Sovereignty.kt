@@ -5,6 +5,7 @@ import me.iroom.sovereignty.area.AreaManager.getLocationArea
 import me.iroom.sovereignty.team.TeamManager.registerTeam
 import me.iroom.sovereignty.commands.CommandStructure
 import me.iroom.sovereignty.commands.SubCommand
+import me.iroom.sovereignty.gui.GUIListener
 import me.iroom.sovereignty.util.Option
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -23,6 +24,7 @@ class Sovereignty: JavaPlugin() {
     override fun onEnable() {
         server.consoleSender.sendMessage("${ChatColor.GREEN}소버린티 플러그인이 활성화되었습니다.")
         server.pluginManager.registerEvents(EvListener(), this)
+        server.pluginManager.registerEvents(GUIListener(), this)
 
         CommandStructure().register(SubCommand("team")
             .register(SubCommand("join") // team join <TEAM> <PLAYER>
