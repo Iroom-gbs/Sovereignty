@@ -34,21 +34,21 @@ class Area(areaID : Int, coreLoc : Location, team: String) {
     companion object {
         const val maxLevel = 6
 
-        fun Option.getArea() = Area(this["areaID"].first().value.toInt()).apply {
+        fun Option.getArea() = Area(this["areaID"].int).apply {
             val opt = this@getArea
             coreLoc = Location(
-                Bukkit.getWorld(UUID.fromString(opt["coreLocUID"].first().value)),
-                opt["coreX"].first().value.toDouble(),
-                opt["coreY"].first().value.toDouble(),
-                opt["coreZ"].first().value.toDouble()
+                Bukkit.getWorld(UUID.fromString(opt["coreLocUID"].string)),
+                opt["coreX"].double,
+                opt["coreY"].double,
+                opt["coreZ"].double
             )
-            team = opt["team"].first().value
-            reinforced = opt["reinforced"].first().value == "1"
-            reinforceEndTime = Calendar.getInstance().apply { timeInMillis = opt["reinforcedTime"].first().value.toLong() }
-            vulnerable = opt["vulnerable"].first().value == "1"
-            vulnerableEndTime = Calendar.getInstance().apply { timeInMillis = opt["vulnerableTime"].first().value.toLong() }
-            coreHp = opt["corehp"].first().value.toInt()
-            level = opt["level"].first().value.toInt()
+            team = opt["team"].string
+            reinforced = opt["reinforced"].string == "1"
+            reinforceEndTime = Calendar.getInstance().apply { timeInMillis = opt["reinforcedTime"].long }
+            vulnerable = opt["vulnerable"].string == "1"
+            vulnerableEndTime = Calendar.getInstance().apply { timeInMillis = opt["vulnerableTime"].long }
+            coreHp = opt["corehp"].int
+            level = opt["level"].int
         }
     }
 
@@ -125,10 +125,19 @@ class Area(areaID : Int, coreLoc : Location, team: String) {
         if (p.getTeam()!!.name != team) {
             if (!reinforced) {
                 if (vulnerable) {
+                    while(level < 2) {
+                        var select: Area? = null
+                        for(x in AreaManager.Areas.filter { it.areaID != this.areaID && it.team == this.team }) {
+                            select = select ?: x
+                            if(select.level < x.level)
+                                select = x
+                        }
+                        level++
+                        select!!.level--
+                    }
+
                     team = p.getTeam()!!.name
                     level = 2
-
-                    //TODO: 팀포인트 깎기
                     normalizeArea()
                 } else {
                     reinforceArea()

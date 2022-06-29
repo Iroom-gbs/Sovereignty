@@ -7,43 +7,26 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
 object AreaGUI {
-    fun createGuiItem(material: Material?, name: String?): ItemStack? {
-        val item = ItemStack(material!!, 1)
-        val meta = item.itemMeta
-
-        meta!!.setDisplayName(name)
-        item.itemMeta = meta
-        return item
-    }
-    fun createGuiItem(material: Material?, name: String?, vararg lore: String?): ItemStack? {
-        val item = ItemStack(material!!, 1)
-        val meta = item.itemMeta
-
-        meta!!.setDisplayName(name)
-        meta.lore = Arrays.asList(*lore)
-        item.itemMeta = meta
-        return item
-    }
-
     fun showAreaGUI(p: Player) {
         p.openInventory(setAreaGUI())
     }
 
     fun setAreaGUI(): Inventory {
-        var inv = Bukkit.createInventory(null, 45, "소버린티")
-        for(i in 0..4) {
-            for(j in 0..4) {
+        val inv = Bukkit.createInventory(null, 45, "소버린티")
+        for (i in 0..4) {
+            for (j in 0..4) {
                 val a = Areas[i + 5 * j]
                 var matName = "CONCRETE"
                 var colorName = ""
-                if(a.reinforced) matName = "GLAZED_TERRACOTTA"
-                if(a.vulnerable) matName = "STAINED_GLASS"
+                if (a.reinforced) matName = "GLAZED_TERRACOTTA"
+                if (a.vulnerable) matName = "STAINED_GLASS"
 
-                if(a.team.getTeam() != null) {
+                if (a.team.getTeam() != null) {
                     when (a.team.getTeam()!!.color) {
                         ChatColor.AQUA -> colorName = "AQUA"
                         ChatColor.BLACK -> colorName = "BLACK"
@@ -63,31 +46,32 @@ object AreaGUI {
                         ChatColor.YELLOW -> colorName = "YELLOW"
                         else -> colorName = "RED"
                     }
-                }
-                else {
+                } else {
                     colorName = "RED"
                 }
 
                 Bukkit.getConsoleSender().sendMessage(colorName.plus("_").plus(matName))
                 val m = Material.getMaterial(colorName.plus("_").plus(matName))
-                val num = i+5*j+1
-                val item = ItemStack(m!!, a.level+1)
+                val num = i + 5 * j + 1
+                val item = ItemStack(m!!, a.level + 1)
                 val meta = item.itemMeta
                 meta!!.setDisplayName(num.toString().plus("번 구역"))
-                if(a.reinforced) {
+                if (a.reinforced) {
                     val lore = ArrayList<String>()
                     lore.add("강화 상태")
-                    var milis = a.reinforceEndTime.time.time - Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).time.time
-                    milis = milis/1000/60
+                    var milis =
+                        a.reinforceEndTime.time.time - Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).time.time
+                    milis = milis / 1000 / 60
                     lore.add(milis.toString().plus("분 남음"))
                     meta.lore = lore
                 }
-                if(a.vulnerable) {
+                if (a.vulnerable) {
                     val lore = ArrayList<String>()
                     lore.add("강화 상태")
                     lore.add("취약 상태")
-                    var milis = a.vulnerableEndTime.time.time - Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).time.time
-                    milis = milis/1000/60
+                    var milis =
+                        a.vulnerableEndTime.time.time - Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).time.time
+                    milis = milis / 1000 / 60
                     lore.add(milis.toString().plus("분 남음"))
                     meta.lore = lore
                 }
@@ -99,4 +83,6 @@ object AreaGUI {
 
         return inv
     }
+
+    fun Player.openLevelUpDownGUI(areaID: Int) = this.openInventory(LevelUpDownGUI(areaID).inventory)
 }

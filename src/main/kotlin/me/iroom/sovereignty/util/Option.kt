@@ -17,7 +17,7 @@ class Option(bkey: String, bvalue: String) {
             _value = value.encodeOption
         }
 
-    init {value = bvalue}
+    init { value = bvalue }
 
     val subOptions = emptyList<Option>().toMutableList()
 
@@ -26,6 +26,15 @@ class Option(bkey: String, bvalue: String) {
     public fun append(opt: Option) = this.apply{subOptions.add(opt)}
     public fun append(key: String, value: String) = append(Option(key, value))
     public fun append(key: String, value: Any) = append(Option(key, value))
+
+    public val List<Option>.int
+        get() = this.first().value.toInt()
+    public val List<Option>.long
+        get() = this.first().value.toLong()
+    public val List<Option>.string
+        get() = this.first().value
+    public val List<Option>.double
+        get() = this.first().value.toDouble()
 
     companion object {
         private fun CountStartRArrow(s: String): Pair<Int, String>
