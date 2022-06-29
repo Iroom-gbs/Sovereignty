@@ -2,7 +2,7 @@ package me.iroom.sovereignty
 
 import me.iroom.sovereignty.area.AreaManager
 import me.iroom.sovereignty.area.AreaManager.getLocationArea
-import me.iroom.sovereignty.area.TeamManager.registerTeam
+import me.iroom.sovereignty.team.TeamManager.registerTeam
 import me.iroom.sovereignty.commands.CommandStructure
 import me.iroom.sovereignty.commands.SubCommand
 import me.iroom.sovereignty.util.Option

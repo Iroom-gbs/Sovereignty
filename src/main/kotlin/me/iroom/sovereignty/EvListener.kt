@@ -13,7 +13,7 @@ import org.bukkit.event.world.StructureGrowEvent
 import org.bukkit.event.player.PlayerBucketFillEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import me.iroom.sovereignty.area.AreaManager.isProtectedArea
-import me.iroom.sovereignty.area.TeamManager.getTeam
+import me.iroom.sovereignty.team.TeamManager.getTeam
 import me.iroom.sovereignty.gui.AreaGUI.showAreaGUI
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
