@@ -16,7 +16,10 @@ import me.iroom.sovereignty.gui.LevelUpDownGUI
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.block.Block
+import org.bukkit.block.data.type.Scaffolding
 import org.bukkit.event.block.*
 import org.bukkit.event.player.*
 
@@ -27,17 +30,36 @@ class EvListener : Listener {
         val p = event.player
         val a = getLocationArea(b.location)
 
-        if(b.type == Material.BEDROCK) {
-            showAreaGUI(event.player)
-        }
-
         if(isCoreBlock(b.location)) {
             if(a.coreHp >= 0) {
                 if(p.getTeam() != null) {
-                    if(p.getTeam()!!.name != a.team)
+                    if(p.getTeam()!!.name != a.team) {
+                        Bukkit.getOnlinePlayers().forEach {
+                            if(it.getTeam()!=null) {
+                                if(it.getTeam()!!.name == a.team) {
+                                    it.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent("${ChatColor.RED}${a.areaID}번 구역이 공격받고 있습니다!"))
+                                }
+                            }
+                        }
                         a.coreHp -= 1
+                    }
                 }
-                else a.coreHp -= 1
+                else {
+                    a.coreHp -= 1
+                    if(p.getTeam()!!.name != a.team) {
+                        Bukkit.getOnlinePlayers().forEach {
+                            if (it.getTeam() != null) {
+                                if (it.getTeam()!!.name == a.team) {
+                                    it.spigot().sendMessage(
+                                        ChatMessageType.ACTION_BAR,
+                                        TextComponent("${ChatColor.RED}${a.areaID}번 구역이 공격받고 있습니다!")
+                                    )
+                                }
+                            }
+                        }
+                        a.coreHp -= 1
+                    }
+                }
             }
 
             if(a.coreHp <= 0) a.coreBreak(event.player)
@@ -58,6 +80,10 @@ class EvListener : Listener {
                 event.player.openInventory(LevelUpDownGUI(it.areaID).inventory)
                 event.isCancelled = true
             }
+
+        if(event.player.inventory.itemInMainHand.type == Material.COMPASS) {
+            showAreaGUI(event.player)
+        }
     }
 
     @EventHandler
@@ -66,8 +92,8 @@ class EvListener : Listener {
         val p = event.player
         //보호구역내에 서바이벌 플레이어가 설치했다면 취소
         if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) event.isCancelled = true
-        //구역이 자기 팀이 아니면 취소
-        if(!(p.getTeam() != null && getLocationArea(b.location).team == p.getTeam()!!.name)) event.isCancelled = true
+        //구역이 자기 팀이 아니고 비계가 아니면 취소
+        if(!(p.getTeam() != null && getLocationArea(b.location).team == p.getTeam()!!.name) && (event.block.type != Material.SCAFFOLDING)) event.isCancelled = true
     }
 
     @EventHandler

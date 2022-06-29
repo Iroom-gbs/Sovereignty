@@ -4,6 +4,8 @@ import me.iroom.sovereignty.team.TeamManager
 import me.iroom.sovereignty.team.TeamManager.getLeftPoint
 import me.iroom.sovereignty.team.TeamManager.getTeam
 import me.iroom.sovereignty.util.Option
+import net.md_5.bungee.api.ChatMessageType
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.*
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
@@ -134,6 +136,11 @@ class Area(areaID : Int, coreLoc : Location, team: String) {
                         }
                         level++
                         select!!.level--
+
+                        Bukkit.getOnlinePlayers().forEach {
+                            it.sendTitle("${areaID}번 코어가 점령되었습니다!", "", 20, 40, 20)
+                            it.playSound(it.location, Sound.ENTITY_ENDER_DRAGON_DEATH, 1f, 1f)
+                        }
                     }
 
                     team = p.getTeam()!!.name
@@ -147,10 +154,16 @@ class Area(areaID : Int, coreLoc : Location, team: String) {
                     if (hour in 5..7) cal.add(Calendar.HOUR_OF_DAY, 6)
                     if (hour in 8..11) cal.add(Calendar.HOUR_OF_DAY, 4)
                     if (hour in 12..16) cal.add(Calendar.HOUR_OF_DAY, 3)
-                    if (hour in 17..19) cal.add(Calendar.HOUR_OF_DAY, 2)
-                    if (hour in 20..23) cal.add(Calendar.HOUR_OF_DAY, 10)
+                    if (hour in 17..21) cal.add(Calendar.HOUR_OF_DAY, 2)
+                    if (hour in 22..23) cal.add(Calendar.HOUR_OF_DAY, 10)
                     reinforceEndTime = cal
+
+                    Bukkit.getOnlinePlayers().forEach {
+                        it.sendTitle("${areaID}번 코어가 강화되었습니다!", "", 20, 40, 20)
+                        it.playSound(it.location, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f)
+                    }
                 }
+
             }
         }
     }
