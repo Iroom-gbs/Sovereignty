@@ -1,6 +1,8 @@
 package me.iroom.sovereignty.area
 
-import me.iroom.sovereignty.area.TeamManager.getTeam
+import me.iroom.sovereignty.team.TeamManager
+import me.iroom.sovereignty.team.TeamManager.getLeftPoint
+import me.iroom.sovereignty.team.TeamManager.getTeam
 import me.iroom.sovereignty.util.Option
 import org.bukkit.*
 import org.bukkit.boss.BarColor
@@ -57,6 +59,7 @@ class Area(areaID : Int, coreLoc : Location, team: String) {
     }
 
     fun levelUp() {
+        if(team.getTeam()!!.getLeftPoint <= 0) return
         if (level == maxLevel) return
         if (reinforced) return
         level++

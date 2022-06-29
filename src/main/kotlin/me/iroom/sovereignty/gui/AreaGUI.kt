@@ -1,7 +1,7 @@
 package me.iroom.sovereignty.gui
 
 import me.iroom.sovereignty.area.AreaManager.Areas
-import me.iroom.sovereignty.area.TeamManager.getTeam
+import me.iroom.sovereignty.team.TeamManager.getTeam
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
