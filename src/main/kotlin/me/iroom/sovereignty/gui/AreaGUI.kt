@@ -50,7 +50,6 @@ object AreaGUI {
                     colorName = "RED"
                 }
 
-                Bukkit.getConsoleSender().sendMessage(colorName.plus("_").plus(matName))
                 val m = Material.getMaterial(colorName.plus("_").plus(matName))
                 val num = i + 5 * j + 1
                 val item = ItemStack(m!!, a.level + 1)
