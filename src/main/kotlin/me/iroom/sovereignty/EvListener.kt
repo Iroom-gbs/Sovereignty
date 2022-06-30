@@ -33,6 +33,8 @@ class EvListener : Listener {
         val p = event.player
         val a = getLocationArea(b.location)
 
+        if(p.gameMode == GameMode.CREATIVE) return
+
         if(isCoreBlock(b.location)) {
             if(a.coreHp >= 0) {
                 if(p.getTeam() != null) {
@@ -98,6 +100,7 @@ class EvListener : Listener {
     fun onBlockPlace(event: BlockPlaceEvent) {
         val b = event.blockPlaced
         val p = event.player
+        if(p.gameMode == GameMode.CREATIVE) return
         //보호구역내에 서바이벌 플레이어가 설치했다면 취소
         if (isProtectedArea(b.location) && p.gameMode == GameMode.SURVIVAL) event.isCancelled = true
         //구역이 자기 팀이 아니고 비계가 아니면 취소
