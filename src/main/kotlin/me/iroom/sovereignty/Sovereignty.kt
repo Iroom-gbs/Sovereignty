@@ -7,9 +7,13 @@ import me.iroom.sovereignty.commands.CommandStructure
 import me.iroom.sovereignty.commands.SubCommand
 import me.iroom.sovereignty.gui.GUIListener
 import me.iroom.sovereignty.util.Option
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -25,6 +29,14 @@ class Sovereignty: JavaPlugin() {
         server.consoleSender.sendMessage("${ChatColor.GREEN}소버린티 플러그인이 활성화되었습니다.")
         server.pluginManager.registerEvents(EvListener(), this)
         server.pluginManager.registerEvents(GUIListener(), this)
+
+        val scaf =  ItemStack(Material.SCAFFOLDING,2)
+        val key = NamespacedKey(this, "scaf")
+        val newScaf = ShapedRecipe(key, scaf)
+        newScaf.shape("BAB", "B B", "B B")
+        newScaf.setIngredient('A', Material.STRING)
+        newScaf.setIngredient('B', Material.STICK)
+        this.server.addRecipe(newScaf)
 
         CommandStructure().register(SubCommand("team")
             .register(SubCommand("join") // team join <TEAM> <PLAYER>
