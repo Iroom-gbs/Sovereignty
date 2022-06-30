@@ -39,6 +39,7 @@ class Sovereignty: JavaPlugin() {
         this.server.addRecipe(newScaf)
 
         CommandStructure().register(SubCommand("team")
+            .requireOp()
             .register(SubCommand("join") // team join <TEAM> <PLAYER>
                 .execute { _, args ->
                     server.getPlayer(args[1])!!.registerTeam(args[0])
