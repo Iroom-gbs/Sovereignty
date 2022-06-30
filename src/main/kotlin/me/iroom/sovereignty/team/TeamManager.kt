@@ -7,10 +7,11 @@ import org.bukkit.scoreboard.Team
 
 
 object TeamManager {
-
+    val teams = listOf("더불어 힘", "국민의 민주")
     fun Player.registerTeam(team: String) {
         val t = this.scoreboard.getTeam(team) ?: this.scoreboard.registerNewTeam(team)
         t.addEntry(this.uniqueId.toString())
+        this.sendRawMessage("${t.name} 팀에 가입되었습니다.")
     }
 
     fun String.getTeam() = Bukkit.getScoreboardManager()?.mainScoreboard?.getTeam(this)

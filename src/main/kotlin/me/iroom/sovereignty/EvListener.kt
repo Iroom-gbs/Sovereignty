@@ -13,6 +13,8 @@ import me.iroom.sovereignty.area.AreaManager.isProtectedArea
 import me.iroom.sovereignty.team.TeamManager.getTeam
 import me.iroom.sovereignty.gui.AreaGUI.showAreaGUI
 import me.iroom.sovereignty.gui.LevelUpDownGUI
+import me.iroom.sovereignty.team.TeamManager
+import me.iroom.sovereignty.team.TeamManager.registerTeam
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
@@ -22,6 +24,7 @@ import org.bukkit.block.Block
 import org.bukkit.block.data.type.Scaffolding
 import org.bukkit.event.block.*
 import org.bukkit.event.player.*
+import org.bukkit.scoreboard.Team
 
 class EvListener : Listener {
     @EventHandler
@@ -209,9 +212,7 @@ class EvListener : Listener {
 
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
-
         val p: Player = event.player
-
         //200 (라인 높이) 보다 높이 올라가면 즉사
         if (p.location.y >= 200 && p.gameMode == GameMode.SURVIVAL)
             p.health = 0.0
@@ -225,6 +226,21 @@ class EvListener : Listener {
         }
         else if (p.location.world == Bukkit.getWorld("world")){
             getLocationArea(p.location).bar.removePlayer(p)
+        }
+    }
+
+    @EventHandler
+    fun onPlayerJoin(event: PlayerJoinEvent) {
+        if(event.player.getTeam() == null)
+            TeamManager.teams.firstOrNull { it.getTeam() == null }?.let {
+                event.player.registerTeam(it)
+            }
+        if(event.player.getTeam() == null) {
+            var mi: Team? = null
+            for(x in TeamManager.teams.map { it.getTeam()!! })
+                if(mi == null) mi = x
+                else if(mi.size > x.size) mi = x
+            event.player.registerTeam(mi!!.name)
         }
     }
 }
