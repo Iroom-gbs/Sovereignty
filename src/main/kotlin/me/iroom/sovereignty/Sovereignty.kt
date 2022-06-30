@@ -35,7 +35,7 @@ class Sovereignty: JavaPlugin() {
             .register(SubCommand("op")
                 .requireOp()
                 .register(SubCommand("set_core")
-                    .execute { sender, args ->
+                    .execute { sender, _ ->
                         if(!sender.isOp) return@execute false
 
                         val loc = (sender as Player).location.subtract(0.0,1.0,0.0)
