@@ -77,12 +77,17 @@ class EvListener : Listener {
     fun onInteractItem(event: PlayerInteractEvent) {
         if(event.action == Action.RIGHT_CLICK_BLOCK)
             AreaManager.Areas.firstOrNull { it.coreLoc == event.clickedBlock!!.location }?.let {
-                event.player.openInventory(LevelUpDownGUI(it.areaID).inventory)
-                event.isCancelled = true
+                if(event.player.getTeam() != null) {
+                    if(event.player.getTeam()!!.name == it.team) {
+                        event.player.openInventory(LevelUpDownGUI(it.areaID).inventory)
+                        event.isCancelled = true
+                    }
+                }
             }
 
         if(event.player.inventory.itemInMainHand.type == Material.COMPASS) {
             showAreaGUI(event.player)
+            event.isCancelled = true
         }
     }
 
