@@ -177,7 +177,7 @@ class Area(areaID : Int, coreLoc : Location, team: String) {
         else if(vulnerable) {
             bar.setTitle("${areaID}번 구역 : 취약")
             bar.color = BarColor.PURPLE
-            bar.progress = coreHp/20.0
+            bar.progress = coreHp / 20.0
         }
         else { //일반 상태
             bar.setTitle("${areaID}번 구역")

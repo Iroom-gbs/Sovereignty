@@ -6,6 +6,7 @@ import me.iroom.sovereignty.team.TeamManager.registerTeam
 import me.iroom.sovereignty.commands.CommandStructure
 import me.iroom.sovereignty.commands.SubCommand
 import me.iroom.sovereignty.gui.GUIListener
+import me.iroom.sovereignty.team.TeamManager
 import me.iroom.sovereignty.util.Option
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -42,7 +43,7 @@ class Sovereignty: JavaPlugin() {
             .requireOp()
             .register(SubCommand("join") // team join <TEAM> <PLAYER>
                 .execute { _, args ->
-                    server.getPlayer(args[1])!!.registerTeam(args[0])
+                    server.getPlayer(args[1])!!.registerTeam(TeamManager.teams[args[0].toInt() - 1])
                     true
                 }))
             .register(SubCommand("op")
