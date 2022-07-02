@@ -11,12 +11,12 @@ class GUIListener : Listener {
     fun guiEvent(event: InventoryClickEvent) {
         if(event.inventory.holder is LevelUpDownGUI)
             (event.inventory.holder as LevelUpDownGUI).onClick(event)
+        if(event.view.title == "소버린티") event.isCancelled = true
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun guiInteractEvent(event: InventoryInteractEvent) {
         if(event.inventory.holder is LevelUpDownGUI)
             (event.inventory.holder as LevelUpDownGUI).onInteract(event)
-        if(event.view.title == "소비린티") event.isCancelled = true
     }
 }
