@@ -43,10 +43,12 @@ class LevelUpDownGUI(private val areaID: Int): InventoryHolder {
         when(event.slot) {
             3 -> {
                 area.levelDown()
+                event.whoClicked.closeInventory()
                 event.whoClicked.openInventory(LevelUpDownGUI(getLocationArea(event.whoClicked.location).areaID).inventory)
             }
             5 -> {
                 area.levelUp()
+                event.whoClicked.closeInventory()
                 event.whoClicked.openInventory(LevelUpDownGUI(getLocationArea(event.whoClicked.location).areaID).inventory)
             }
             8 -> event.whoClicked.closeInventory()
