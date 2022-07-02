@@ -7,6 +7,7 @@ import me.iroom.sovereignty.area.Area.Companion.getArea
 import me.iroom.sovereignty.util.Option
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
@@ -99,6 +100,7 @@ object AreaManager {
     fun load(opt: Option) {
         Areas.clear()
         Areas.addAll(opt.subOptions.first().subOptions.sortedBy { it["areaID"].first().value.toInt() }.map { it.getArea() })
+        Areas.forEach { it.coreLoc.block.type = Material.SEA_LANTERN }
     }
 
     fun save() {
